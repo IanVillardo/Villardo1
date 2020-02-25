@@ -3,63 +3,220 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>Pelea de Pokemons</title>
+    <style>
+      body {
+        /* Rompe el flujo normal pasa poder hacer swipe hacia abajo. */
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        /* ocupa todo el espacio. */
+        width: 100%;
+        height: 100%;
+        /* Elimina márgenes. */
+        margin: 0;
+        /* Evita el scroll */
+        overflow: hidden;
+      }
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/7.9.1/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/7.9.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/7.9.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/7.9.1/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/7.9.1/firebase-storage.js"></script>
-    <!-- initialize the SDK after all desired features are loaded -->
-    <script defer src="/__/firebase/init.js"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
+      .figura {
+        position: absolute;
+        display: block;
+        font-size: 60px;
       }
     </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
+<!--Script Para PIKACHU Y SUS TRUENOS-->
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+      function desvía(i) {
+        return i + 15 - 20 * Math.random();
+      }
+      customElements.define("figura-trueno", class extends HTMLElement {
+        connectedCallback() {
+          this.classList.add("figura")
+          this.innerHTML = "<img src=\"https://gif.toutimages.com/images/ciel/meteo/meteo_027.gif\" width=\"320px\" height=\"200px\">";
+          this.style.fontSize = "30px";
+        }
+        muévete(x, y) {
+          this.style.left = `${desvía(x)}px`;
+          this.style.top = `${desvía(y)}px`;
+        }
+      });
+      customElements.define("figura-fuego", class extends HTMLElement {
+        connectedCallback() {
+          this.classList.add("figura")
+          this.innerHTML = "<img src=\"https://i.gifer.com/5Mz4.gif\" width=\"120px\" height=\"80px\">";
+          this.style.fontSize = "30px";
+        }
+        muévete(x, y) {
+          this.style.left = `${desvía(x)}px`;
+          this.style.top = `${desvía(y)}px`;
+        }
+      });
+      customElements.define("figura-pikachu", class extends HTMLElement {
+        connectedCallback() {
+          this.classList.add("figura")
+          this.innerHTML="<img src=\"https://media0.giphy.com/media/kuWN0iF9BLQKk/giphy.gif\" width=\"280px\" height=\"130px\">";
+          this.x = 0;
+          this.y = 300;
+        }
+        sube() {
+          this.y -= 20;
+          this.muévete()
+        }
+        baja() {
+          this.y += 20;
+          this.muévete()
+        }
+        izquierda() {
+          this.x -= 20;
+          this.muévete()
+        }
+        derecha() {
+          this.x += 20;
+          this.muévete()
+        }
+        muévete() {
+          this.truenos = Array.from(document.querySelectorAll("figura-trueno"));
+          this.style.left = `${this.x}px`;
+          this.style.top = `${this.y}px`;
+          var incr = 60;
+          for (const trueno of this.truenos) {
+            trueno.muévete(this.x + incr, this.y + incr);
+            incr += 30;
+          }
+        }
+      });
+      customElements.define("figura-cindaquil", class extends HTMLElement {
+        connectedCallback() {
+          this.classList.add("figura")
+          this.innerHTML="<img src=\"https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1d0f4a28-92c4-4446-a802-5e0860f6b8e4/d7w8pee-473775d1-7e5d-4f9f-a996-5ab070f386de.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzFkMGY0YTI4LTkyYzQtNDQ0Ni1hODAyLTVlMDg2MGY2YjhlNFwvZDd3OHBlZS00NzM3NzVkMS03ZTVkLTRmOWYtYTk5Ni01YWIwNzBmMzg2ZGUuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.KenUvc_dRs1Qy9mwWroAQ_f2Ht1iEfcg5nIrlRKLhK4\" width=\"280px\" height=\"130px\">";
+          this.x = 1100;
+          this.y = 300;
+        }
+        sube() {
+          this.y -= 20;
+          this.muévete()
+        }
+        baja() {
+          this.y += 20;
+          this.muévete()
+        }
+        izquierda() {
+          this.x -= 20;
+          this.muévete()
+        }
+        derecha() {
+          this.x += 20;
+          this.muévete()
+        }
+        muévete() {
+          this.fuegos = Array.from(document.querySelectorAll("figura-fuego"));
+          this.style.left = `${this.x}px`;
+          this.style.top = `${this.y}px`;
+          var incr = 60;
+          for (const fuego of this.fuegos) {
+            fuego.muévete(this.x + incr, this.y + incr);
+            incr += 15;
+          }
         }
       });
     </script>
-  </body>
+  </head>
+  <center><body>
+    <div><center><b> <H1 style="color:#FFFFFF"; </H1>Aprieta las flechas del teclado <br> o <br>Mueve con El touch de tu dispositivo<br><br><br><br><br><br><br></b></center></div>
+    <div data-video="TLYsuP4BH3w"  
+    data-autoplay="1"         
+    data-loop="1"             
+    id="youtube-audio">
+</div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://cdn.rawgit.com/labnol/files/master/yt.js"></script>
+    <body background="https://sge.org/wp-content/uploads/2017/07/luz-fondo-negro-e1567761780921.jpg">
+    <figura-pikachu id="pikachu"></figura-pikachu>
+    <figura-trueno></figura-trueno>
+    <figura-trueno></figura-trueno>
+    <figura-trueno></figura-trueno>
+    <figura-trueno></figura-trueno>
+    <figura-cindaquil id="cindaquil"></figura-cindaquil>
+    <figura-fuego></figura-fuego>
+    <figura-fuego></figura-fuego>
+    <figura-fuego></figura-fuego>
+    <figura-fuego></figura-fuego>
+    <footer><center><b> <p style="color:#FFFFFF"; </p>Villardo Guzman Ismael Ian</b></center></footer>
+ 
+        <!--Script Para Movimientos Pikachu-->
+    <script>
+      pikachu.muévete();
+      document.addEventListener("keydown", evt => {
+        switch (evt.key) {
+          case "ArrowLeft":
+            pikachu.izquierda();
+            break;
+          case "ArrowRight":
+            pikachu.derecha();
+            break;
+          case "ArrowUp":
+            pikachu.sube();
+            break;
+          case "ArrowDown":
+            pikachu.baja();
+            break;
+        }
+      });
+      cindaquil.muévete();
+      document.addEventListener("keydown", evt => {
+        switch (evt.key) {
+            case "ArrowLeft":
+            cindaquil.derecha();
+            break;
+          case "ArrowRight":
+            cindaquil.izquierda();
+            break;
+          case "ArrowUp":
+            cindaquil.sube();
+            break;
+          case "ArrowDown":
+            cindaquil.baja();
+            break;
+        }
+      });
+      let iniciaX = null;
+      let iniciaY = null;
+      document.addEventListener('touchstart', evt => {
+        const toquInicial = evt.touches[0];
+        iniciaX = toquInicial.clientX;
+        iniciaY = toquInicial.clientY;
+      });
+      document.addEventListener('touchmove', evt => {
+        if (iniciaX && iniciaY) {
+          const mueve = evt.touches[0];
+          var mueveX = mueve.clientX;
+          var mueveY = mueve.clientY;
+          var difX = mueveX - iniciaX;
+          var difY = mueveY - iniciaY;
+          // Checa que el movimiento no sea muy corto,
+          if (Math.abs(difX) + Math.abs(difY) > 150) {
+            if (Math.abs(difX) > Math.abs(difY)) {
+              if (difX > 70) {
+                pikachu.derecha();
+                cindaquil.izquierda();
+              } else {
+                pikachu.izquierda();
+                cindaquil.derecha();              
+              }
+            } else if (difY > 70) {
+              pikachu.baja();
+              cindaquil.baja();
+            } else {
+              pikachu.sube();
+              cindaquil.sube();
+            }
+            // Reinicia valores.
+            iniciaX = null;
+            iniciaY = null;
+          }
+        }
+      });
+    </script>
+  </body></center>
 </html>
